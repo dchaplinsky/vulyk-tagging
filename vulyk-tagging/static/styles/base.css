@@ -1,0 +1,46 @@
+body {
+    padding-top: 50px;
+}
+.btn-group {
+    margin: 3px 0;
+}
+.done .word {
+    background: #AAFBAA;
+}
+
+.tags.done {
+    border: 1px solid #AAFBAA;
+}
+
+.progress {
+    height: 8px;
+    margin: 10px 0;
+}
+
+.label-post {
+    background: #8B0000;
+}
+
+.label-nmbr {
+    background: #0000CD;
+}
+
+.label-gndr {
+    background: #006400;
+}
+
+.label-CAse {
+    background: #FF4500;
+}
+
+.label-ANim {
+    background: #008080;
+}
+
+.label-aspc {
+    background: #2F4F4F;
+}
+
+.label-tense {
+    background: #7B68EE;
+}
