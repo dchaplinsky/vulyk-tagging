@@ -108,4 +108,4 @@ Tips
 
 To run a subset of tests::
 
-    $ python -m unittest tests.test_vulyk-tagging
+    $ python -m unittest tests.test_vulyk_tagging

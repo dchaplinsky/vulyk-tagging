@@ -23,7 +23,7 @@ test_requirements = [
 ]
 
 setup(
-    name='vulyk-tagging',
+    name='vulyk_tagging',
     version='0.1.0',
     description="Vulyk tagging plugin",
     long_description=readme + '\n\n' + history,
@@ -31,10 +31,10 @@ setup(
     author_email='gotsyk@gmail.com',
     url='https://github.com/hotsyk/vulyk-tagging',
     packages=[
-        'vulyk-tagging',
+        'vulyk_tagging',
     ],
-    package_dir={'vulyk-tagging':
-                 'vulyk-tagging'},
+    package_dir={'vulyk_tagging':
+                 'vulyk_tagging'},
     include_package_data=True,
     install_requires=requirements,
     license="BSD",

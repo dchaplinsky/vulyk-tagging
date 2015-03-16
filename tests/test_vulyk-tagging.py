@@ -2,18 +2,18 @@
 # -*- coding: utf-8 -*-
 
 """
-test_vulyk-tagging
+test_vulyk_tagging
 ----------------------------------
 
-Tests for `vulyk-tagging` module.
+Tests for `vulyk_tagging` module.
 """
 
 import unittest
 
-from vulyk-tagging import vulyk-tagging
+import vulyk_tagging
 
 
-class TestVulyk-tagging(unittest.TestCase):
+class TestVulyk_tagging(unittest.TestCase):
 
     def setUp(self):
         pass
