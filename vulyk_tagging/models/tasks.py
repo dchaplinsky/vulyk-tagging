@@ -3,6 +3,7 @@
 from mongoengine import DictField, StringField
 
 from vulyk.models.tasks import AbstractTask, AbstractAnswer
+from vulyk.models.task_types import AbstractTaskType
 
 
 class TaggingTask(AbstractTask):
@@ -35,3 +36,16 @@ class TaggingAnswer(AbstractAnswer):
             'created_at'
         ]
     }
+
+
+class TaggingTaskType(AbstractTaskType):
+    """
+    Tagging Task to work with Vulyk.
+    """
+    answer_model = TaggingAnswer
+    task_model = TaggingTask
+
+    template = "vulyk_tagging/index.html"
+    type_name = "tagging_task"
+
+    redundancy = 3
