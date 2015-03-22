@@ -44,3 +44,7 @@ body {
 .label-tense {
     background: #7B68EE;
 }
+
+p.lead {
+    text-align: left;
+}

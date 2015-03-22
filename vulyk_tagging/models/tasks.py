@@ -25,7 +25,7 @@ class TaggingAnswer(AbstractAnswer):
     """
     Tagging Answer to work with Vulyk
     """
-    sentance = DictField()
+    sentence = DictField()
 
     meta = {
         'collection': 'tagging_reports',
@@ -45,7 +45,15 @@ class TaggingTaskType(AbstractTaskType):
     answer_model = TaggingAnswer
     task_model = TaggingTask
 
-    template = "vulyk_tagging/index.html"
+    template = "base.html"
     type_name = "tagging_task"
 
     redundancy = 3
+
+    JS_ASSETS = ["static/scripts/keymaster.js",
+                 "static/scripts/handlebars.js",
+                 "static/scripts/bootstrap-select.js",
+                 "static/scripts/base.js"]
+
+    CSS_ASSETS = ["static/styles/bootstrap-select.css",
+                  "static/styles/base.css"]
