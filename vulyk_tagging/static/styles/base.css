@@ -45,3 +45,9 @@
 p.lead {
     text-align: left;
 }
+
+.no-word-wrapper {
+    display: inline-block;
+    position: relative;
+    vertical-align: middle;    
+}

@@ -32,13 +32,15 @@ $(function() {
     }
 
     function select_next() {
-        select(words_wrapper.find("a.word.active").parent().next(),
-               true);
+        select(
+            words_wrapper.find("a.word.active").parent().nextAll(".word-wrapper:first"),
+            true);
     }
 
     function select_prev() {
-        select(words_wrapper.find("a.word.active").parent().prev(),
-               true);
+        select(
+            words_wrapper.find("a.word.active").parent().prevAll(".word-wrapper:first"),
+            true);
     }
 
     function update_progress() {
@@ -48,8 +50,17 @@ $(function() {
         } else {
             bar
                 .find(".progress-bar")
-                .width((words_wrapper.filter(".done").length / words_wrapper.length * 100) + "%");
+                .width(
+                    (words_wrapper.filter(".done").length /
+                     words_wrapper.length * 100) + "%");
         }
+    }
+
+    function serialize() {
+        return output.find(">div.done").map(function(){
+            var word = $(this);
+            return {word: word.find("a").html(), tags: word.data("tags")};
+        }).get();
     }
 
     output.on("click", "a.tags", function(e) {
@@ -62,6 +73,10 @@ $(function() {
 
         // Good ol' tricks
         window.setTimeout(select_next, 0);
+    });
+
+    output.on("click", ".no-word-wrapper a", function(e) {
+        e.preventDefault();
     });
 
 
@@ -79,5 +94,11 @@ $(function() {
 
         select(words_wrapper.eq(0), true);
         update_progress();
+    }).on("vulyk.save", function(e, callback) {
+        if (words_wrapper.filter(".done").length == words_wrapper.length) {
+            callback(serialize());
+        } else {
+            select(words_wrapper.filter(":not(.done)").eq(0), true);          
+        }
     });
 });
