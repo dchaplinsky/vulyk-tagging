@@ -2,12 +2,15 @@
 Credits
 =======
 
-Development Lead
+Development Team
 ----------------
 
+* Dmytro Hambal <mr_gambal@outlook.com>
+* Dmitry Chaplinsky <chaplinsky.dmitry@gmail.com>
 * Volodymyr Hotsyk <gotsyk@gmail.com>
+
 
 Contributors
 ------------
 
-None yet. Why not be the first?
+You can be here, see :doc:`Contributing <CONTRIBUTING>`
