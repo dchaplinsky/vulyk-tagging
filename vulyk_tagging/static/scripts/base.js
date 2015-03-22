@@ -100,5 +100,7 @@ $(function() {
         } else {
             select(words_wrapper.filter(":not(.done)").eq(0), true);          
         }
+    }).on("vulyk.skip", function(e, callback) {
+        callback();
     });
 });
