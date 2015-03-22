@@ -1,6 +1,3 @@
-body {
-    padding-top: 50px;
-}
 .btn-group {
     margin: 3px 0;
 }
@@ -47,4 +44,10 @@ body {
 
 p.lead {
     text-align: left;
+}
+
+.no-word-wrapper {
+    display: inline-block;
+    position: relative;
+    vertical-align: middle;    
 }

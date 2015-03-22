@@ -1,19 +1,12 @@
 $(function() {
+    var template = Handlebars.compile($('#tagme_template').html()),
+        output = $("#out"),
+        bar = $(".total-progress"),
+        word_wrapper;
+
     Handlebars.registerHelper('strictif', function(conditional, options) {
         return Handlebars.helpers['if'].call(this, conditional !== false, {fn: options.fn, inverse: options.inverse, hash: options.hash});
     });
-
-    var data = {
-        "sentence": [["Гучне", [[["adj", "post"], ["s", "nmbr"], ["n", "gndr"], ["v_naz", "CAse"], ["compb", "forms"]], [["adj", "post"], ["s", "nmbr"], ["n", "gndr"], ["v_zna", "CAse"], ["compb", "forms"]]]], ["затримання", [[["noun", "post"], ["s", "nmbr"], ["n", "gndr"], ["v_naz", "CAse"], ["inanim", "ANim"]], [["noun", "post"], ["s", "nmbr"], ["n", "gndr"], ["v_rod", "CAse"], ["inanim", "ANim"]], [["noun", "post"], ["s", "nmbr"], ["n", "gndr"], ["v_zna", "CAse"], ["inanim", "ANim"]], [["noun", "post"], ["p", "nmbr"], ["v_naz", "CAse"], ["inanim", "ANim"]], [["noun", "post"], ["p", "nmbr"], ["v_zna", "CAse"], ["inanim", "ANim"]]]], ["підполковника", [[["noun", "post"], ["s", "nmbr"], ["m", "gndr"], ["v_rod", "CAse"], ["anim", "ANim"]], [["noun", "post"], ["s", "nmbr"], ["m", "gndr"], ["v_zna", "CAse"], ["anim", "ANim"]]]], ["Нацгвардії", []], ["за", [[["prep", "post"], ["rv_rod", "req_case"], ["rv_zna", "req_case"], ["rv_oru", "req_case"]]]], ["хабар", [[["noun", "post"], ["s", "nmbr"], ["m", "gndr"], ["v_naz", "CAse"], ["inanim", "ANim"]], [["noun", "post"], ["s", "nmbr"], ["m", "gndr"], ["v_zna", "CAse"], ["inanim", "ANim"]]]], ["від", [[["prep", "post"], ["rv_rod", "req_case"]]]], ["постачальника", [[["noun", "post"], ["s", "nmbr"], ["m", "gndr"], ["v_rod", "CAse"], ["anim", "ANim"]], [["noun", "post"], ["s", "nmbr"], ["m", "gndr"], ["v_zna", "CAse"], ["anim", "ANim"]]]], ["консервів", [[["noun", "post"], ["p", "nmbr"], ["v_rod", "CAse"], ["inanim", "ANim"]]]], ["може", [[["verb", "post"], ["unknown", "aux"]], [["insert", "post"]]]], ["обернутись", [[["verb", "post"], ["inf", "verb_type"], ["rev", "aux"], ["perf", "aspc"]]]], ["пшиком", [[["noun", "post"], ["s", "nmbr"], ["m", "gndr"], ["v_oru", "CAse"], ["inanim", "ANim"]]]], [",", false], ["оскільки", [[["conj", "post"], ["subord", "conj_type"]]]], ["військових", [[["adj", "post"], ["p", "nmbr"], ["v_mis", "CAse"]], [["adj", "post"], ["p", "nmbr"], ["v_rod", "CAse"]], [["adj", "post"], ["p", "nmbr"], ["v_zna", "CAse"]]]], ["тиловиків", [[["noun", "post"], ["p", "nmbr"], ["v_rod", "CAse"], ["anim", "ANim"]], [["noun", "post"], ["p", "nmbr"], ["v_zna", "CAse"], ["anim", "ANim"]]]], ["не", [[["part", "post"]]]], ["люблять", [[["verb", "post"], ["pres", "tense"], ["p", "nmbr"], ["3", "PErs"], ["imperf", "aspc"]]]], ["садити", [[["verb", "post"], ["inf", "verb_type"], ["imperf", "aspc"]]]], ["в", [[["prep", "post"], ["rv_zna", "req_case"], ["rv_mis", "req_case"], ["rv_rod", "req_case"], ["v-u", "aux"]]]], ["тюрму", [[["noun", "post"], ["s", "nmbr"], ["f", "gndr"], ["v_zna", "CAse"], ["inanim", "ANim"]]]], [".", false]]},
-
-        template = Handlebars.compile($('#tagme_template').html()),
-        output = $("#out"),
-        bar = $(".total-progress"),
-        words_wrapper;
-
-    output.html(template(data));
-    words_wrapper = output.find("> .word-wrapper");
-
 
     function select(item, toggle) {
         var tags;
@@ -39,13 +32,15 @@ $(function() {
     }
 
     function select_next() {
-        select(words_wrapper.find("a.word.active").parent().next(),
-               true);
+        select(
+            words_wrapper.find("a.word.active").parent().nextAll(".word-wrapper:first"),
+            true);
     }
 
     function select_prev() {
-        select(words_wrapper.find("a.word.active").parent().prev(),
-               true);
+        select(
+            words_wrapper.find("a.word.active").parent().prevAll(".word-wrapper:first"),
+            true);
     }
 
     function update_progress() {
@@ -55,11 +50,20 @@ $(function() {
         } else {
             bar
                 .find(".progress-bar")
-                .width((words_wrapper.filter(".done").length / words_wrapper.length * 100) + "%");
+                .width(
+                    (words_wrapper.filter(".done").length /
+                     words_wrapper.length * 100) + "%");
         }
     }
 
-    output.find("a.tags").on("click", function(e) {
+    function serialize() {
+        return output.find(">div.done").map(function(){
+            var word = $(this);
+            return {word: word.find("a").html(), tags: word.data("tags")};
+        }).get();
+    }
+
+    output.on("click", "a.tags", function(e) {
         e.preventDefault();
         var el = $(this),
             word_wrapper = el.closest(".word-wrapper");
@@ -71,14 +75,32 @@ $(function() {
         window.setTimeout(select_next, 0);
     });
 
-    words_wrapper.find("a.word").on("click", function(e) {
+    output.on("click", ".no-word-wrapper a", function(e) {
         e.preventDefault();
-        select($(this).parent(), false);
     });
+
 
     key('left', select_prev);
     key('right', select_next);
 
-    select(words_wrapper.eq(0), true);
-    update_progress();
+    $(document.body).on("vulyk.next", function(e, data) {
+        output.html(template(data.result.task.data));
+        words_wrapper = output.find("> .word-wrapper");
+
+        words_wrapper.find("a.word").on("click", function(e) {
+            e.preventDefault();
+            select($(this).parent(), false);
+        });
+
+        select(words_wrapper.eq(0), true);
+        update_progress();
+    }).on("vulyk.save", function(e, callback) {
+        if (words_wrapper.filter(".done").length == words_wrapper.length) {
+            callback(serialize());
+        } else {
+            select(words_wrapper.filter(":not(.done)").eq(0), true);          
+        }
+    }).on("vulyk.skip", function(e, callback) {
+        callback();
+    });
 });

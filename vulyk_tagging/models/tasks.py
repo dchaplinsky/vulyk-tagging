@@ -10,32 +10,14 @@ class TaggingTask(AbstractTask):
     """
     Tagging Task to work with Vulyk.
     """
-    sentence = StringField()
-
-    meta = {
-        'collection': 'tagging_tasks',
-        'allow_inheritance': True,
-        'indexes': [
-            'task_type'
-        ]
-    }
+    pass
 
 
 class TaggingAnswer(AbstractAnswer):
     """
     Tagging Answer to work with Vulyk
     """
-    sentence = DictField()
-
-    meta = {
-        'collection': 'tagging_reports',
-        'allow_inheritance': True,
-        'indexes': [
-            'task',
-            'created_by',
-            'created_at'
-        ]
-    }
+    pass
 
 
 class TaggingTaskType(AbstractTaskType):
@@ -46,6 +28,7 @@ class TaggingTaskType(AbstractTaskType):
     task_model = TaggingTask
 
     template = "base.html"
+    helptext_template = "help.html"
     type_name = "tagging_task"
 
     redundancy = 3
