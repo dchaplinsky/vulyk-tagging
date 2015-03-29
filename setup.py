@@ -31,6 +31,9 @@ setup(
     url='https://github.com/hotsyk/vulyk-tagging',
     packages=[
         'vulyk_tagging',
+        'vulyk_tagging.models',
+        'vulyk_tagging.static',
+        'vulyk_tagging.views'
     ],
     package_dir={'vulyk_tagging':
                  'vulyk_tagging'},
