@@ -1,11 +1,43 @@
 $(function() {
     var template = Handlebars.compile($('#tagme_template').html()),
+        popup_template = Handlebars.compile($('#tagpopup_template').html()),
+        tagset_template = Handlebars.compile($('#tagset_template').html()),
         output = $("#out"),
         bar = $(".total-progress"),
-        word_wrapper;
+        word_wrapper,
+        tags_dict,
+        tags;
 
     Handlebars.registerHelper('strictif', function(conditional, options) {
         return Handlebars.helpers['if'].call(this, conditional !== false, {fn: options.fn, inverse: options.inverse, hash: options.hash});
+    });
+
+    tags_dict = {
+        post: [
+            'noun', 'pron', 'verb', 'adj', 'adjp', 'adv', 'advp',
+            'prep', 'predic', 'insert', 'conj', 'part', 'excl', 'numr'
+        ],
+        nmbr: ['p', 's'],
+        gndr: ['m', 'f', 'n'],
+        PErs: [1, 2, 3],
+        CAse: ['v_naz', 'v_rod', 'v_dav', 'v_zna', 'v_oru', 'v_mis', 'v_kly'],
+        tantum: ['np', 'ns'],
+        req_case: ['rv_naz', 'rv_rod', 'rv_dav', 'rv_zna', 'rv_oru', 'rv_mis'],
+        tense: ['futr', 'past', 'pres'],
+        mood: ['impr'],
+        verb_type: ['inf', 'impers'],
+        voice: ['actv', 'pasv'],
+        conj_type: ['subord', 'coord'],
+        aspc: ['perf', 'imperf'],
+        trns: ['tran', 'intran'],
+        forms: ['compb', 'compr', 'super'],
+        ANim: ['anim', 'inanim']
+    };
+
+    tags = $.map(tags_dict, function(tags, type) {
+        return $.map(tags, function(tag) {
+            return {text: tag, type: type};
+        });
     });
 
     function select(item, toggle) {
@@ -57,7 +89,7 @@ $(function() {
     }
 
     function serialize() {
-        return output.find(">div.done").map(function(){
+        return output.find(">div.done").map(function() {
             var word = $(this);
             return {word: word.find("a").html(), tags: word.data("tags")};
         }).get();
@@ -79,7 +111,6 @@ $(function() {
         e.preventDefault();
     });
 
-
     key('left', select_prev);
     key('right', select_next);
 
@@ -93,12 +124,91 @@ $(function() {
         });
 
         select(words_wrapper.eq(0), true);
+
+        output.find("[data-tags=NONE]").magnificPopup({
+            items: {
+                type: "inline",
+                src: popup_template()
+            },
+            callbacks: {
+                open: function() {
+                    var popup = this,
+                        input = $(".mfp-content").find(".tags-autocomplete"),
+                        keyboardHandler = function(e) {
+                            // confirm first suggestion on tab
+                            if (e.which === 9) {
+                                var self = $(this),
+                                    menu = self.data("ttTypeahead").menu,
+                                    suggestions = menu.getSelectableData(menu.getTopSelectable());
+
+                                if (suggestions) {
+                                    input.tagsinput("add", suggestions.obj);
+                                    self.typeahead("val", "");
+                                }
+                            } else if (e.which === 13) {
+                                var tags = input.val().split(","),
+                                    html = tagset_template({tags_serialized: tags.join(":") + ":", tags: input.tagsinput("items")}),
+                                    li = popup.st.el.parent();
+
+                                li.before(html);
+                                popup.close();
+
+                                li.prev().find("a").click();
+
+                            }
+                        },
+                        ti = input.tagsinput({
+                            itemValue: "text",
+                            itemText: "text",
+                            freeInput: false,
+                            tagClass: function(item) {
+                                return "label label-default label-" + item.type;
+                            },
+                            typeaheadjs: [
+                                {
+                                    hint: false
+                                },
+                                {
+                                    displayKey: "text",
+                                    source: function(query, sync) {
+                                        var suggestions = [];
+
+                                        $.each(tags, function(i, tag) {
+                                            if ((new RegExp('^' + query)).test(tag.text)) {
+                                                suggestions.push(tag);
+                                            }
+                                        });
+
+                                        sync(suggestions);
+                                    }
+                                }
+                            ]
+                        });
+
+                    ti[0].$input.on("keydown", keyboardHandler);
+
+                    input.on("beforeItemAdd", function(e) {
+                        // check if we don't have tags of the same type yet
+                        var items = $(e.target).tagsinput("items");
+
+                        $.each(items, function(_, tag) {
+                            if (e.item.type === tag.type) {
+                                e.cancel = true;
+                            }
+                        });
+                    });
+
+                    ti[0].$input.focus();   // this doesn't work
+                }
+            }
+        });
+
         update_progress();
     }).on("vulyk.save", function(e, callback) {
         if (words_wrapper.filter(".done").length == words_wrapper.length) {
             callback(serialize());
         } else {
-            select(words_wrapper.filter(":not(.done)").eq(0), true);          
+            select(words_wrapper.filter(":not(.done)").eq(0), true);
         }
     }).on("vulyk.skip", function(e, callback) {
         callback();

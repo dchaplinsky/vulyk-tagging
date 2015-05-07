@@ -25,7 +25,11 @@ class TaggingTaskType(AbstractTaskType):
     JS_ASSETS = ['static/scripts/keymaster.js',
                  'static/scripts/handlebars.js',
                  'static/scripts/bootstrap-select.js',
+                 'static/scripts/typeahead.js',
+                 'static/scripts/bootstrap-tagsinput.js',
                  'static/scripts/base.js']
 
     CSS_ASSETS = ['static/styles/bootstrap-select.css',
-                  'static/styles/base.css']
+                  'static/styles/bootstrap-tagsinput.css',
+                  'static/styles/base.css',
+                  'static/styles/autocomplete.css']

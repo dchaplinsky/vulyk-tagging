@@ -21,12 +21,35 @@
                 </li>
 
             {{/each}}
-            <li><a href="#" class="tags" data-tags="NONE">Коректний варіант відсутній</a></li>
+            <li><a href="#" data-tags="NONE">Коректний варіант відсутній</a></li>
         </ul>
     </div>
     {{ else }}
     <div class="no-word-wrapper done"><a href="">{{ [0] }}</a></div>
     {{/strictif}}
     {{/each}}
+    {% endraw %}
+</script>
+
+<script id="tagpopup_template" type="text/x-handlebars-template">
+    {% raw %}
+    <div class="popup-tagsinput">
+        <label>
+            Введіть свій варіант
+            <input type="text" class="tags-autocomplete" data-role="tagsinput"/>
+        </label>
+    </div>
+    {% endraw %}
+</script>
+
+<script id="tagset_template" type="text/x-handlebars-template">
+    {% raw %}
+    <li>
+        <a class="tags" href="#" data-tags="{{ tags_serialized }}">
+            {{#each tags}}
+                <span class="label label-default label-{{ this.type }}">{{ this.text }}</span>
+            {{/each}}
+        </a>
+    </li>
     {% endraw %}
 </script>

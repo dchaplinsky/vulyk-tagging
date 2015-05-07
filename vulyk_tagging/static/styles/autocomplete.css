@@ -1,0 +1,35 @@
+.tt-menu {
+    background: white;
+    border: 1px solid #e4e4e4;
+    margin-top: 5px;
+    margin-left: -10px;
+}
+
+.popup-tagsinput {
+    background: white;
+    padding: 50px;
+}
+
+.tt-cursor {
+    background-color: #c6c6c6;
+}
+
+.tt-selectable {
+    padding: 5px 10px;
+}
+
+.bootstrap-tagsinput {
+    display: block;
+}
+
+.bootstrap-tagsinput input {
+    display: block;
+}
+
+.mfp-inline-holder .mfp-content {
+    width: 50%;
+}
+
+.tt-input::focus {
+    border: 2px solid blue;
+}
