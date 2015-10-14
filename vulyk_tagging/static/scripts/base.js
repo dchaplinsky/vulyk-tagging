@@ -64,8 +64,10 @@ $(function() {
                 item.find("a.tags[data-tags='" + tags + "']")
                     .focus()
                     .addClass("done");
-            } else {
-                item.find("a.tags").eq(0).focus();
+            } else if (toggle) {
+                window.setTimeout(function() {
+                    item.find("a.tags").eq(0).focus();
+                });
             }
         }
     }
