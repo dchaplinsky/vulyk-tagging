@@ -90,18 +90,24 @@ MAPPING = {
     "gen": "aux",
     "contr": "aux",
     "time": "aux",
+    "&pron": "aux",
+
+    # Will be removed later
+    "&adj": "aux",
+    "phras": "aux",
 }
 
 BUG_FIXES = {
-    "&pron": "pron",
-    "<adv>": "adv",
-    "</adv>": "adv",
-    "<insert>": "insert",
-    "</insert>": "insert",
-    "<prep": "prep",
-    "</prep": "prep",
-    "&adjp": "adjp",
-    "rv_oru>": "rv_oru",
+    # "&pron": "pron",
+    # "<adv>": "adv",
+    # "</adv>": "adv",
+    # "<insert>": "insert",
+    # "</insert>": "insert",
+    # "<prep": "prep",
+    # "</prep": "prep",
+    # "&adjp": "adjp",
+    # "&adj": "adjp",
+    # "rv_oru>": "rv_oru",
 }
 
 
@@ -116,32 +122,38 @@ def parse_file(content):
 
         for word, tags_raw in word_forms:
             tag_options = []
-            if "//punct" not in tags_raw:
+            if "/punct" not in tags_raw:
                 tags = re.findall("([^/]+)\/([^,]+),*", tags_raw)
                 for tag in tags:
                     tag_details = filter(
                         lambda x: x not in ["punct", "null", ""],
                         tag[1].split(":"))
 
-                    tag_details = map(
-                        lambda x: [BUG_FIXES.get(x, x),
-                                   MAPPING[BUG_FIXES.get(x, x)]],
-                        tag_details)
+                    try:
+                        tag_details = map(
+                            lambda x: [BUG_FIXES.get(x, x),
+                                       MAPPING[BUG_FIXES.get(x, x)]],
+                            tag_details)
+                    except KeyError:
+                        print("%s: %s" % (word, tag_details))
 
                     tag_options.append(tag_details)
 
-            sentence.append([word.strip(), tag_options])
+                sentence.append([word.strip(), tag_options])
+            else:
+                sentence.append([word.strip(), False])
 
-        yield {"sentence": sentence}
+        if sentence:
+            yield {"sentence": sentence}
 
 
 if __name__ == '__main__':
     if len(sys.argv) < 3:
         exit("Not enough arguments")
 
-    for f in glob(sys.argv[1]):
-        with open(f, "r") as fp, open(sys.argv[2], "w") as f_out:
-            for sentence in parse_file(fp.read()):
-                f_out.write(
-                    json.dumps({"sentence": sentence}, ensure_ascii=False) +
-                    "\n")
+    with open(sys.argv[2], "w") as f_out:
+        for f in glob(sys.argv[1]):
+            with open(f, "r") as fp:
+                for sentence in parse_file(fp.read()):
+                    f_out.write(json.dumps(sentence, ensure_ascii=False)
+                                + "\n")

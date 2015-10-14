@@ -1,12 +1,13 @@
 .btn-group {
     margin: 3px 0;
 }
+
 .done .word {
     background: #AAFBAA;
 }
 
 .tags.done {
-    border: 1px solid #AAFBAA;
+    background: #AAFBAA;
 }
 
 .progress {
@@ -49,5 +50,40 @@ p.lead {
 .no-word-wrapper {
     display: inline-block;
     position: relative;
-    vertical-align: middle;    
+    vertical-align: middle;
+}
+
+.bootstrap-tagsinput .tt-input {
+    line-height: 22px;
+    display: inline-block;
+}
+
+.bootstrap-tagsinput .tag {
+    line-height: 17px;
+}
+
+.bootstrap-tagsinput {
+    height: 37px;
+}
+
+.tt-suggestion {
+    line-height: 1.3em;
+}
+
+.tt-suggestion p {
+    margin: 0;
+}
+
+.mfp-bg {
+    background: none;
+}
+
+.popup-tagsinput .bootstrap-tagsinput {
+    float: left;
+    width: 80%;
+    margin-right: 20px;
+}
+
+.popup-tagsinput .btn-save {
+    float: left;
 }

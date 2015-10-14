@@ -10,6 +10,10 @@
     padding: 50px;
 }
 
+.popup-tagsinput label {
+    display: block;
+}
+
 .tt-cursor {
     background-color: #c6c6c6;
 }
@@ -30,6 +34,14 @@
     width: 50%;
 }
 
-.tt-input::focus {
-    border: 2px solid blue;
+.bootstrap-tagsinput .tag {
+    font-size: 12px;
+}
+
+.bootstrap-tagsinput .tt-input {
+    font-size: 12px;
+}
+
+.bootstrap-tagsinput .twitter-typeahead {
+    margin-top: 4px;
 }

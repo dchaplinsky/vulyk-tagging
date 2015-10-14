@@ -19,7 +19,7 @@ $(function() {
         ],
         nmbr: ['p', 's'],
         gndr: ['m', 'f', 'n'],
-        PErs: [1, 2, 3],
+        PErs: ["1", "2", "3"],
         CAse: ['v_naz', 'v_rod', 'v_dav', 'v_zna', 'v_oru', 'v_mis', 'v_kly'],
         tantum: ['np', 'ns'],
         req_case: ['rv_naz', 'rv_rod', 'rv_dav', 'rv_zna', 'rv_oru', 'rv_mis'],
@@ -31,7 +31,11 @@ $(function() {
         aspc: ['perf', 'imperf'],
         trns: ['tran', 'intran'],
         forms: ['compb', 'compr', 'super'],
-        ANim: ['anim', 'inanim']
+        ANim: ['anim', 'inanim'],
+        aux: ["nv", "bad", "rev", "rare", "v-u", "abbr", "coll", "slang",
+              "unknown", "pers", "alt", "init", "fname", "lname", "patr",
+              "number", "dem", "int", "rel", "pos", "def", "ind", "refl",
+              "neg", "gen", "contr", "time", "&pron", "&adj", "phras"]
     };
 
     tags = $.map(tags_dict, function(tags, type) {
@@ -49,11 +53,14 @@ $(function() {
             item.find("a.word").addClass("active");
 
             if (toggle) {
-                item.find("a.word").dropdown("toggle");
+                window.setTimeout(function() {
+                    item.find("a.word").dropdown("toggle");
+                }, 0);
             }
 
             tags = item.data("tags");
             if (tags) {
+                item.find("a.tags").removeClass("done");
                 item.find("a.tags[data-tags='" + tags + "']")
                     .focus()
                     .addClass("done");
@@ -126,41 +133,58 @@ $(function() {
         select(words_wrapper.eq(0), true);
 
         output.find("[data-tags=NONE]").magnificPopup({
+            // closeOnBgClick: false;
             items: {
                 type: "inline",
                 src: popup_template()
             },
             callbacks: {
+                close: function() {
+                    select(this.st.el.closest(".word-wrapper"), true);
+                },
                 open: function() {
                     var popup = this,
-                        input = $(".mfp-content").find(".tags-autocomplete"),
+                        itemJustAdded = false,
+                        button = $(".mfp-content .btn-save"),
+                        input = $(".mfp-content .tags-autocomplete"),
+                        closeAndUpdate = function() {
+                            if (input.val()) {
+                                var tags = input.val().split(","),
+                                    html = tagset_template({tags_serialized: tags.join(":") + ":", tags: input.tagsinput("items")}),
+                                    li = popup.st.el.parent();
+
+                                if (tags !== "") {
+                                    popup.close();
+        
+                                    li.before(html);
+                                    li.prev().find("a").click();
+                                }
+                            }
+                        },
                         keyboardHandler = function(e) {
                             // confirm first suggestion on tab
-                            if (e.which === 9) {
+                            if (e.which === 9 || e.which === 13) {
                                 var self = $(this),
+                                    typed = $(e.target).val(),
                                     menu = self.data("ttTypeahead").menu,
                                     suggestions = menu.getSelectableData(menu.getTopSelectable());
 
                                 if (suggestions) {
                                     input.tagsinput("add", suggestions.obj);
                                     self.typeahead("val", "");
+                                } else if (e.which === 13 && !itemJustAdded) {
+                                    closeAndUpdate();
                                 }
-                            } else if (e.which === 13) {
-                                var tags = input.val().split(","),
-                                    html = tagset_template({tags_serialized: tags.join(":") + ":", tags: input.tagsinput("items")}),
-                                    li = popup.st.el.parent();
 
-                                li.before(html);
-                                popup.close();
-
-                                li.prev().find("a").click();
-
+                                itemJustAdded = false;
+                                e.stopPropagation();
                             }
                         },
                         ti = input.tagsinput({
                             itemValue: "text",
                             itemText: "text",
                             freeInput: false,
+                            confirmKeys: [],
                             tagClass: function(item) {
                                 return "label label-default label-" + item.type;
                             },
@@ -187,18 +211,26 @@ $(function() {
 
                     ti[0].$input.on("keydown", keyboardHandler);
 
-                    input.on("beforeItemAdd", function(e) {
-                        // check if we don't have tags of the same type yet
-                        var items = $(e.target).tagsinput("items");
+                    // input.on("beforeItemAdd", function(e) {
+                    //     // check if we don't have tags of the same type yet
+                    //     var items = $(e.target).tagsinput("items");
 
-                        $.each(items, function(_, tag) {
-                            if (e.item.type === tag.type) {
-                                e.cancel = true;
-                            }
-                        });
+                    //     $.each(items, function(_, tag) {
+                    //         if (e.item.type === tag.type) {
+                    //             e.cancel = true;
+                    //         }
+                    //     });
+                    // });
+
+                    input.on("itemAdded", function(e) {
+                        itemJustAdded = true;
                     });
 
-                    ti[0].$input.focus();   // this doesn't work
+                    button.on("click", closeAndUpdate);
+
+                    window.setTimeout(function() {
+                        input.tagsinput('focus');
+                    }, 0);
                 }
             }
         });
