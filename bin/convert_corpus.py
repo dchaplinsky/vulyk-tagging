@@ -137,7 +137,7 @@ def parse_file(content):
                     except KeyError:
                         print("%s: %s" % (word, tag_details))
 
-                    tag_options.append(tag_details)
+                    tag_options.append([tag[0], tag_details])
 
                 sentence.append([word.strip(), tag_options])
             else:

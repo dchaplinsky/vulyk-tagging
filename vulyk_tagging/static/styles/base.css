@@ -43,6 +43,12 @@
     background: #7B68EE;
 }
 
+.label-lemma {
+    background: white;
+    color: black;
+    border: 1px solid silver;
+}
+
 p.lead {
     text-align: left;
 }
@@ -86,4 +92,15 @@ p.lead {
 
 .popup-tagsinput .btn-save {
     float: left;
+}
+
+.lemma-autocomplete {
+    margin-bottom: 5px;
+    border-radius: 4px;
+    height: 37px;
+    padding: 4px 6px;
+    line-height: 22px;
+    border: 1px solid #ccc;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+    color: #333;
 }

@@ -148,11 +148,16 @@ $(function() {
                     var popup = this,
                         itemJustAdded = false,
                         button = $(".mfp-content .btn-save"),
+                        lemma_input = $(".mfp-content .lemma-autocomplete"),
                         input = $(".mfp-content .tags-autocomplete"),
                         closeAndUpdate = function() {
                             if (input.val()) {
                                 var tags = input.val().split(","),
-                                    html = tagset_template({tags_serialized: tags.join(":") + ":", tags: input.tagsinput("items")}),
+                                    html = tagset_template({
+                                        tags_serialized: tags.join(":") + ":", 
+                                        tags: input.tagsinput("items"),
+                                        lemma: $.trim(lemma_input.val())
+                                    }),
                                     li = popup.st.el.parent();
 
                                 if (tags !== "") {
@@ -231,7 +236,7 @@ $(function() {
                     button.on("click", closeAndUpdate);
 
                     window.setTimeout(function() {
-                        input.tagsinput('focus');
+                        lemma_input.focus();
                     }, 0);
                 }
             }
