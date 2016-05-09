@@ -5,7 +5,6 @@ __email__ = 'gotsyk@gmail.com'
 __version__ = '0.1.0'
 
 
-# -*- coding=utf-8 -*-
 import logging
 
 from werkzeug.utils import import_string
@@ -21,7 +20,7 @@ def configure(self_settings):
     """
     settings = {}
     try:
-        local_settings = import_string('vulyk.local_settings')
+        local_settings = import_string('local_settings')
         for attr in dir(self_settings):
             settings[attr] = getattr(self_settings, attr)
         for attr in dir(local_settings):

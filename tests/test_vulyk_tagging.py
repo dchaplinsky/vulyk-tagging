@@ -10,11 +10,8 @@ Tests for `vulyk_tagging` module.
 
 import unittest
 
-import vulyk_tagging
 
-
-class TestVulyk_tagging(unittest.TestCase):
-
+class TestVulykTagging(unittest.TestCase):
     def setUp(self):
         pass
 
