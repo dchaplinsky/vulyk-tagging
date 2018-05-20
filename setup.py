@@ -1,13 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import uuid
-
 try:
     from setuptools import setup
 except ImportError:
     from distutils.core import setup
-
-from pip.req import parse_requirements
 
 with open('README.rst') as readme_file:
     readme = readme_file.read()
@@ -15,9 +11,9 @@ with open('README.rst') as readme_file:
 with open('HISTORY.rst') as history_file:
     history = history_file.read().replace('.. :changelog:', '')
 
-install_reqs = parse_requirements('requirements.txt', session=uuid.uuid1())
+with open('requirements.txt', 'r') as fd:
+    requirements = list(filter(lambda r: not r.strip().startswith('#'), fd.readlines()))
 
-requirements = [str(ir.req) for ir in install_reqs]
 test_requirements = requirements
 
 
@@ -46,11 +42,10 @@ setup(
         'Intended Audience :: Developers',
         'License :: OSI Approved :: BSD License',
         'Natural Language :: English',
-        "Programming Language :: Python :: 2",
-        'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6'
     ],
     test_suite='tests',
     scripts=['bin/convert_corpus.py'],
