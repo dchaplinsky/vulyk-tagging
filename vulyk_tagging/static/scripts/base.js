@@ -98,10 +98,12 @@ $(function() {
     }
 
     function serialize() {
-        return output.find(">div.done").map(function() {
-            var word = $(this);
-            return {word: word.find("a").html(), tags: word.data("tags")};
-        }).get();
+        return {
+            "sentence": output.find(">div.done").map(function() {
+                var word = $(this);
+                return {word: word.find("a").html(), tags: word.data("tags")};
+            }).get()
+        };
     }
 
     output.on("click", "a.tags", function(e) {
