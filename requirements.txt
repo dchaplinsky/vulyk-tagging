@@ -3,4 +3,4 @@ glob2==0.7
 Jinja2==2.11.3
 rjsmin==1.1.0
 Sphinx==3.0.4
-wheel==0.31.0
+wheel==0.38.1
